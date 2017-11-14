@@ -1,0 +1,256 @@
+<template>
+  <div>
+    <div
+      class="bbc-img-full"
+      flex=""
+      @touchmove.stop.prevent>
+      <div
+        flex
+        ref="container"
+        @touchmove.stop.prevent="onMove($event)"
+        @touchstart="onStart($event)"
+        @touchend="onTouchEnd($event)"
+        :style="{
+          transform: translate,
+          transition: 'all ' + duration + 'ms'
+        }"
+        class="content">
+        <div
+          v-for="(src, $index) in imagesArr"
+          :style="{
+            transform: $index === currentIndex
+              ? `translate(${$index * -offset + 'px'}, 0) scale(${scale})`
+              : `translate(${$index * -offset + 'px'}, 0) scale(0.6824)`
+          }"
+          flex-box="0"
+          flex="main:center cross:center"
+          class="touch-item">
+          <img
+          :src="src">
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  let startX = 0
+  let offsetX = 0
+
+  let absX = 0
+  let absY = 0
+
+  let touchStartTime
+  const FAST_CLICK_T = 200
+  const TRANSITION_T = 300
+  const SLIDE_DISTANCE = 50
+  const SCALE = 0.853
+  const SCALED = 0.6824
+
+  export default {
+    name: 'scale-swiper',
+    props: {
+      images: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      index: {
+        default () {
+          return 0
+        }
+      }
+    },
+    data () {
+      const cw = document.body.clientWidth
+      const offset = (cw - cw * SCALE) / 4 + (cw - cw * SCALED) / 2
+
+      return {
+        opacity: 1,
+        offsetY: 0,
+        offsetX: 0,
+        scale: SCALE,
+        duration: 0,
+        currentIndex: this.index,
+        isSlide: false,
+        offset,
+        clientWidth: cw * 0.804488
+      }
+    },
+
+    computed: {
+      translate () {
+        let { offsetX, offsetY } = this
+        return `translate(${offsetX}px, ${offsetY}px)`
+      },
+
+      size () {
+        return this.images.length || 0
+      },
+
+      imagesArr () {
+        return this.images
+      }
+    },
+
+    methods: {
+      open () {
+        this.initParams(this.currentIndex)
+        this.resetTransformation()
+      },
+
+      setImages (arr) {
+        this.images = arr
+      },
+
+      setIndex (idxOrSrc) {
+        if (typeof idxOrSrc === 'number') {
+          this.currentIndex = idxOrSrc
+        } else {
+          this.currentIndex = this.imagesArr.indexOf(idxOrSrc)
+        }
+      },
+
+      onFastClick () {
+        this.isSlide = true
+      },
+
+      // TODO
+      onDoubleClick () {
+      },
+
+      next () {
+        if (this.hasNext()) {
+          this.slide(++this.currentIndex)
+        }
+      },
+
+      prev () {
+        if (this.hasPrev()) {
+          this.slide(--this.currentIndex)
+        }
+      },
+
+      slide (index) {
+        let { clientWidth, addTransitionTime } = this
+        this.isSlide = true
+        this.offsetX = -index * clientWidth
+        addTransitionTime(() => {
+          this.isSlide = false
+        })
+      },
+
+      hasPrev () {
+        return this.currentIndex > 0
+      },
+
+      hasNext () {
+        return this.currentIndex < this.size - 1
+      },
+
+      doSlideClose () {
+        this.isSlide = true
+        this.duration = 200
+        this.offsetY = this.$el.clientHeight
+        this.addTransitionTime(this.close, this.duration)
+      },
+
+      resetTransformation () {
+        let { currentIndex, clientWidth } = this
+        this.offsetY = 0
+        this.offsetX = -currentIndex * clientWidth
+
+        this.opacity = 1
+        this.isSlide = false
+
+        offsetX = 0
+        absX = 0
+
+        this.addTransitionTime()
+      },
+
+      initParams (index) {
+        this.currentIndex = index || 0
+        this.isSlide = false
+
+        offsetX = 0
+        absX = 0
+      },
+
+      addTransitionTime (callback, time = TRANSITION_T) {
+        this.duration = time
+        setTimeout(() => {
+          this.duration = 0
+          callback && callback()
+        }, time)
+      },
+
+      onStart (e) {
+        startX = e.touches[0].pageX
+        absX = 0
+        touchStartTime = new Date()
+      },
+
+      onTouchEnd (e) {
+        const endT = new Date()
+        if (endT - touchStartTime < FAST_CLICK_T &&
+          absX === 0 &&
+          absY === 0) {
+          this.onFastClick()
+          return
+        }
+
+        if (absX > SLIDE_DISTANCE) {
+          offsetX > 0 ? this.prev() : this.next()
+        }
+
+        if (!this.isSlide) {
+          this.resetTransformation()
+        }
+      },
+
+      onMove (e) {
+        let {touches} = e
+
+        offsetX = touches[0].pageX - startX
+        absX = Math.abs(offsetX)
+
+        this.offsetMove(offsetX)
+      },
+
+      offsetMove (offset) {
+        let {
+          currentIndex,
+          clientWidth
+        } = this
+
+        this.offsetX = currentIndex === 0
+          ? offset
+          : (-currentIndex * clientWidth) + offset
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  .bbc-img-full {
+    width: 100%;
+    .content {
+      width: 100%;
+      position: relative;
+      transition-property: transform;
+      box-sizing: content-box;
+      overflow: visible;
+      .touch-item {
+        width: 100%;
+        transition: all 0.3s;
+      }
+      img {
+        width: 100%;
+        box-shadow: 0 0 13px rgba(0,0,0,0.3);
+        border-radius: 6px;
+      }
+    }
+  }
+</style>
