@@ -47,6 +47,8 @@
   const SCALE = 0.853
   const SCALED = 0.6824
 
+  let timer = ''
+
   export default {
     name: 'scale-swiper',
     props: {
@@ -59,6 +61,13 @@
       index: {
         default () {
           return 0
+        }
+      },
+      options: {
+        default () {
+          return {
+            autoplay: true
+          }
         }
       }
     },
@@ -75,7 +84,9 @@
         currentIndex: this.index,
         isSlide: false,
         offset,
-        clientWidth: cw * 0.804488
+        clientWidth: cw * 0.804488,
+        timer
+        // imagesArr: this.images
       }
     },
 
@@ -94,7 +105,22 @@
       }
     },
 
+    mounted () {
+      this.initParams(this.currentIndex)
+    },
+
     methods: {
+      autoplay () {
+        timer = setInterval(() => {
+          if (this.hasNext()) {
+            this.next()
+          } else {
+            this.currentIndex = 0
+            this.slide(0)
+          }
+        }, 3000)
+      },
+
       open () {
         this.initParams(this.currentIndex)
         this.resetTransformation()
@@ -176,6 +202,10 @@
 
         offsetX = 0
         absX = 0
+
+        if (this.options.autoplay) {
+          this.autoplay()
+        }
       },
 
       addTransitionTime (callback, time = TRANSITION_T) {
