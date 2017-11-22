@@ -18,13 +18,6 @@
 
   export default {
     name: 'scale-slide',
-    props: {
-      // index: {
-      //   default () {
-      //     return 0
-      //   }
-      // }
-    },
     data () {
       const cw = document.body.clientWidth
       const offset = (cw - cw * SCALE) / 4 + (cw - cw * SCALED) / 2

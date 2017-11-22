@@ -16,19 +16,6 @@
         }"
         class="content">
         <slot></slot>
-        <!-- <div
-          v-for="(src, $index) in imagesArr"
-          :style="{
-            transform: $index === currentIndex
-              ? `translate(${$index * -offset + 'px'}, 0) scale(${scale})`
-              : `translate(${$index * -offset + 'px'}, 0) scale(0.6824)`
-          }"
-          flex-box="0"
-          flex="main:center cross:center"
-          class="touch-item">
-          <img
-          :src="src">
-        </div> -->
       </div>
     </div>
   </div>
@@ -45,9 +32,6 @@
   const FAST_CLICK_T = 200
   const TRANSITION_T = 300
   const SLIDE_DISTANCE = 50
-  // const SCALE = 0.853
-  // const SCALED = 0.6824
-
   let timer = ''
 
   export default {
@@ -78,9 +62,6 @@
         let { offsetX, offsetY } = this
         return `translate(${offsetX}px, ${offsetY}px)`
       }
-      // imagesArr () {
-      //   return this.images
-      // }
     },
 
     mounted () {
@@ -112,16 +93,7 @@
         this.images = arr
       },
 
-      // setIndex (idxOrSrc) {
-      //   if (typeof idxOrSrc === 'number') {
-      //     this.currentIndex = idxOrSrc
-      //   } else {
-      //     this.currentIndex = this.imagesArr.indexOf(idxOrSrc)
-      //   }
-      // },
-
       onFastClick () {
-        // this.isSlide = true
       },
 
       next () {
@@ -164,9 +136,6 @@
         let { currentIndex, clientWidth } = this
         this.offsetY = 0
         this.offsetX = -currentIndex * clientWidth
-
-        this.opacity = 1
-        this.isSlide = false
 
         offsetX = 0
         absX = 0
