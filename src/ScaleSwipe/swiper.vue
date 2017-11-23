@@ -1,13 +1,10 @@
 <template>
   <div>
-    <div
-      class="bbc-img-full"
-      flex=""
-      @touchmove.stop.prevent>
+    <div class="bbc-img-full" flex>
       <div
         flex
         ref="container"
-        @touchmove.stop.prevent="onMove($event)"
+        @touchmove="onMove($event)"
         @touchstart="onStart($event)"
         @touchend="onTouchEnd($event)"
         :style="{
