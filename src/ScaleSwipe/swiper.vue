@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="bbc-img-full" flex>
+    <div
+      class="bbc-img-full"
+      flex>
       <div
         flex
         ref="container"
@@ -20,7 +22,9 @@
 
 <script>
   let startX = 0
+  let startY = 0
   let offsetX = 0
+  let offsetY = 0
 
   let absX = 0
   let absY = 0
@@ -29,6 +33,7 @@
   const FAST_CLICK_T = 200
   const TRANSITION_T = 300
   const SLIDE_DISTANCE = 50
+
   let timer = ''
 
   export default {
@@ -86,11 +91,8 @@
         this.size++
       },
 
-      setImages (arr) {
-        this.images = arr
-      },
-
       onFastClick () {
+        // this.isSlide = true
       },
 
       next () {
@@ -134,6 +136,9 @@
         this.offsetY = 0
         this.offsetX = -currentIndex * clientWidth
 
+        this.opacity = 1
+        this.isSlide = false
+
         offsetX = 0
         absX = 0
 
@@ -162,7 +167,11 @@
 
       onStart (e) {
         startX = e.touches[0].pageX
+        startY = e.touches[0].pageY
+
         absX = 0
+        absY = 0
+
         touchStartTime = new Date()
       },
 
@@ -187,10 +196,16 @@
       onMove (e) {
         let {touches} = e
 
+        offsetY = touches[0].pageY - startY
         offsetX = touches[0].pageX - startX
         absX = Math.abs(offsetX)
+        absY = Math.abs(offsetY)
 
-        this.offsetMove(offsetX)
+        if (absY < absX) {
+          e.preventDefault()
+          e.stopPropagation()
+          this.offsetMove(offsetX)
+        }
       },
 
       offsetMove (offset) {

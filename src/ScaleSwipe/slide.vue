@@ -3,7 +3,7 @@
     :style="{
       transform: index === currentIndex
         ? `translate(${index * -offset + 'px'}, 0) scale(${scale})`
-        : `translate(${index * -offset + 'px'}, 0) scale(0.6824)`
+        : `translate(${index * -offset + 'px'}, 0) scale(${SCALED})`
     }"
     flex-box="0"
     flex="main:center cross:center"
@@ -25,6 +25,7 @@
       return {
         index: 0,
         scale: SCALE,
+        SCALED: SCALED,
         offset,
         clientWidth: cw * 0.804488
       }
