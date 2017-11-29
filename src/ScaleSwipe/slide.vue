@@ -7,7 +7,7 @@
     }"
     flex-box="0"
     flex="main:center cross:center"
-    class="touch-item">
+    class="swiper-touch-item">
     <slot></slot>
   </div>
 </template>
@@ -46,7 +46,7 @@
 </script>
 
 <style scoped lang="scss">
-  .touch-item {
+  .swiper-touch-item {
     width: 100%;
     transition: all 0.3s;
     overflow: hidden;

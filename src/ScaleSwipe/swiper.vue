@@ -1,11 +1,11 @@
 <template>
   <div>
     <div
-      class="bbc-img-full"
+      class="swiper-wrapper"
       flex>
       <div
         flex
-        ref="container"
+        ref="swiper-container"
         @touchmove="onMove($event)"
         @touchstart="onStart($event)"
         @touchend="onTouchEnd($event)"
@@ -50,7 +50,6 @@
     data () {
       const cw = document.body.clientWidth
       return {
-        offsetY: 0,
         offsetX: 0,
         currentIndex: this.options.index || 0,
         clientWidth: cw * 0.804488,
@@ -62,7 +61,7 @@
     computed: {
       translate () {
         let { offsetX, offsetY } = this
-        return `translate(${offsetX}px, ${offsetY}px)`
+        return `translate(${offsetX}px, 0)`
       }
     },
 
@@ -122,13 +121,6 @@
 
       hasNext () {
         return this.currentIndex < this.size - 1
-      },
-
-      doSlideClose () {
-        this.isSlide = true
-        this.duration = 200
-        this.offsetY = this.$el.clientHeight
-        this.addTransitionTime(this.close, this.duration)
       },
 
       resetTransformation () {
@@ -223,9 +215,9 @@
 </script>
 
 <style scoped lang="scss">
-  .bbc-img-full {
+  .swiper-wrapper {
     width: 100%;
-    .content {
+    .swiper-content {
       width: 100%;
       position: relative;
       transition-property: transform;
