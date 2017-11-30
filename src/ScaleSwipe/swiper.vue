@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div
-      class="swiper-wrapper"
-      flex>
+    <div class="swiper-wrapper" flex>
       <div
         flex
         ref="swiper-container"
@@ -29,7 +27,6 @@
   let absX = 0
   let absY = 0
 
-  let touchStartTime
   const FAST_CLICK_T = 200
   const TRANSITION_T = 300
   const SLIDE_DISTANCE = 50
@@ -88,10 +85,6 @@
       addItem (cb) {
         cb(this.size)
         this.size++
-      },
-
-      onFastClick () {
-        // this.isSlide = true
       },
 
       next () {
@@ -163,19 +156,9 @@
 
         absX = 0
         absY = 0
-
-        touchStartTime = new Date()
       },
 
       onTouchEnd (e) {
-        const endT = new Date()
-        if (endT - touchStartTime < FAST_CLICK_T &&
-          absX === 0 &&
-          absY === 0) {
-          this.onFastClick()
-          return
-        }
-
         if (absX > SLIDE_DISTANCE) {
           offsetX > 0 ? this.prev() : this.next()
         }

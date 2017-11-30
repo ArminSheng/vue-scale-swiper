@@ -26,8 +26,7 @@
         index: 0,
         scale: SCALE,
         SCALED: SCALED,
-        offset,
-        clientWidth: cw * 0.804488
+        offset
       }
     },
 
