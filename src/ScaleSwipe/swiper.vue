@@ -1,19 +1,17 @@
 <template>
-  <div>
-    <div class="swiper-wrapper" flex>
-      <div
-        flex
-        ref="swiper-container"
-        @touchmove="onMove($event)"
-        @touchstart="onStart($event)"
-        @touchend="onTouchEnd($event)"
-        :style="{
-          transform: translate,
-          transition: 'all ' + duration + 'ms'
-        }"
-        class="content">
-        <slot></slot>
-      </div>
+  <div class="swiper-wrapper" flex>
+    <div
+      flex
+      ref="swiper-container"
+      @touchmove="onMove($event)"
+      @touchstart="onStart($event)"
+      @touchend="onTouchEnd($event)"
+      :style="{
+        transform: translate,
+        transition: 'all ' + duration + 'ms'
+      }"
+      class="content">
+      <slot></slot>
     </div>
   </div>
 </template>
